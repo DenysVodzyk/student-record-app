@@ -1,14 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import ListStudentComponent from "./components/ListStudentComponent";
+import HeaderComponent from "./components/HeaderComponent";
+import FooterComponent from "./components/FooterComponent";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>GELOOOO</h1>
-      </header>
-    </div>
-  );
+    return (
+        <div>
+            <Router>
+                <HeaderComponent/>
+                <div className="container">
+                    <Routes>
+                        <Route exact path="/" element={<ListStudentComponent/>}/>
+                        <Route exact path="/students" element={<ListStudentComponent/>}/>
+                    </Routes>
+                </div>
+                <FooterComponent/>
+            </Router>
+        </div>
+    );
 }
 
 export default App;
