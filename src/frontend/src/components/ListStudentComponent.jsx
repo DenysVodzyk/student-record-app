@@ -7,14 +7,27 @@ const ListStudentComponent = () => {
     const [students, setStudents] = useState([])
 
     useEffect(() => {
+        getAllStudents();
+    }, [])
+
+    const getAllStudents = () => {
         StudentService.getStudents().then((res) => {
             setStudents(res.data)
             console.log(res.data);
         }).catch(error => {
             console.log(error);
         })
-    }, [])
+    }
 
+    const deleteStudent = (studentId) => {
+        StudentService.deleteStudent(studentId).then((response) => {
+            getAllStudents();
+
+        }).catch(error => {
+            console.log(error);
+        })
+
+    }
 
     return (
         <div className="container">
@@ -22,6 +35,7 @@ const ListStudentComponent = () => {
             <Link to="/add-student" className="btn btn-primary mb-2"> Add Student </Link>
             <table className="table table-striped table-bordered">
                 <thead>
+                <th>Student Id</th>
                 <th>Student First Name</th>
                 <th>Student Last Name</th>
                 <th>Student Email Address</th>
@@ -32,9 +46,16 @@ const ListStudentComponent = () => {
                     students.map(
                         student =>
                             <tr key={student.id}>
+                                <td>{student.id}</td>
                                 <td>{student.firstName}</td>
                                 <td>{student.lastName}</td>
                                 <td>{student.email}</td>
+                                <td>
+                                    <Link className="btn btn-info" to={`/edit-student/${student.id}`}>Update</Link>
+                                    <button className="btn btn-danger" onClick={() => deleteStudent(student.id)}
+                                            style={{marginLeft: "10px"}}> Delete
+                                    </button>
+                                </td>
                             </tr>
                     )
                 }
@@ -45,65 +66,3 @@ const ListStudentComponent = () => {
 }
 
 export default ListStudentComponent;
-
-
-// import React, {Component} from 'react';
-// import StudentService from "../services/StudentService";
-//
-// class ListStudentComponent extends Component {
-//     constructor(props) {
-//         super(props);
-//
-//         this.state = {
-//             students: []
-//         }
-//         this.addStudent = this.addStudent.bind(this);
-//     }
-//
-//     componentDidMount() {
-//         StudentService.getStudents().then((res) => {
-//             this.setState({students: res.data});
-//         });
-//     }
-//
-//     addStudent() {
-//         this.props.history.push('/add-student');
-//     }
-//
-//     render() {
-//         return (
-//             <div>
-//                 <h2 className="text-center">Students List</h2>
-//                 <div className="row">
-//                     <button className="btn btn-primary" onClick={this.addStudent}>Add Student</button>
-//                 </div>
-//                 <div className="row">
-//                     <table className="table table-striped table-bordered">
-//                         <thead>
-//                         <tr>
-//                             <th>Student First Name</th>
-//                             <th>Student Last Name</th>
-//                             <th>Student Email Address</th>
-//                             <th>Actions</th>
-//                         </tr>
-//                         </thead>
-//                         <tbody>
-//                         {
-//                             this.state.students.map(
-//                                 student =>
-//                                     <tr key={student.id}>
-//                                         <td>{student.firstName}</td>
-//                                         <td>{student.lastName}</td>
-//                                         <td>{student.email}</td>
-//                                     </tr>
-//                             )
-//                         }
-//                         </tbody>
-//                     </table>
-//                 </div>
-//             </div>
-//         );
-//     }
-// }
-//
-// export default ListStudentComponent;

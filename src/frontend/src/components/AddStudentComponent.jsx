@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import StudentService from "../services/StudentService";
 
 
@@ -9,21 +9,50 @@ const AddStudentComponent = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
+    const {id} = useParams();
 
-    const saveStudent = (e) => {
+
+    const saveOrUpdateStudent = (e) => {
         e.preventDefault();
 
         const student = {firstName, lastName, email}
 
-        StudentService.addStudent(student).then((res) => {
+        if (id) {
+            StudentService.updateStudent(id, student).then((res) => {
+                navigate('/students')
+            }).catch(error => {
+                console.log(error);
+            })
+        } else {
+            StudentService.addStudent(student).then((res) => {
 
-            console.log(res.data)
+                console.log(res.data)
 
-            navigate('/students');
+                navigate('/students');
 
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
+
+    useEffect(() => {
+        StudentService.getStudentById(id).then((res) => {
+            setFirstName(res.data.firstName)
+            setLastName(res.data.lastName)
+            setEmail(res.data.email)
         }).catch(error => {
             console.log(error)
         })
+    }, [])
+
+    const title = () => {
+        if (id) {
+            return <h2 className="text-center">Update Student</h2>
+        } else {
+            return <h2 className="text-center">Add Student</h2>
+        }
     }
 
     return (
@@ -32,7 +61,9 @@ const AddStudentComponent = () => {
             <div className="container">
                 <div className="row">
                     <div className="card col-md-6 offset-md-3 offset-md-3">
-                        <h2 className="text-center"> Add Student </h2>
+                        {
+                            title()
+                        }
                         <div className="card-body">
                             <form>
                                 <div className="form-group mb-2">
@@ -74,7 +105,8 @@ const AddStudentComponent = () => {
                                     </input>
                                 </div>
 
-                                <button className="btn btn-success" onClick={(e) => saveStudent(e)}>Submit</button>
+                                <button className="btn btn-success" onClick={(e) => saveOrUpdateStudent(e)}>Submit
+                                </button>
                                 <Link to="/students" className="btn btn-danger"> Cancel </Link>
                             </form>
                         </div>
