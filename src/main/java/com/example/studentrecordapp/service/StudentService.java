@@ -26,12 +26,26 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public void deleteStudent(Long studentId) {
-        studentRepository.deleteById(studentId);
+    public void deleteStudent(long studentId) {
+        Student deleteStudent = studentRepository.findById(studentId).
+                orElseThrow(() -> new ResourceNotFoundException("Employee with id: " + studentId + " does not exist."));
+        studentRepository.delete(deleteStudent);
     }
 
     @Override
-    public Optional<Student> getStudentById(Long studentId) {
+    public Optional<Student> getStudentById(long studentId) {
         return studentRepository.findById(studentId);
+    }
+
+    @Override
+    public Student updateStudent(long studentId, Student studentDetails) {
+        Student updatedStudent = studentRepository.findById(studentId).
+                orElseThrow(() -> new ResourceNotFoundException("Employee with id: " + studentId + " does not exist."));
+        updatedStudent.setFirstName(studentDetails.getFirstName());
+        updatedStudent.setLastName(studentDetails.getLastName());
+        updatedStudent.setEmail(studentDetails.getEmail());
+
+        studentRepository.save(updatedStudent);
+        return updatedStudent;
     }
 }

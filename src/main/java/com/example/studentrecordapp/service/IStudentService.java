@@ -11,7 +11,9 @@ public interface IStudentService {
 
     Student addStudent(Student student);
 
-    void deleteStudent(Long studentId);
+    void deleteStudent(long studentId);
 
-    Optional<Student> getStudentById(Long studentId);
+    Optional<Student> getStudentById(long studentId);
+
+    Student updateStudent(long studentId, Student studentDetails);
 }
