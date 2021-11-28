@@ -21,7 +21,7 @@ The application is designed to perform basic CRUD operations with student record
 ## Application Interface
 
 <p align="center">
-   <img src ="readMeSource/WebPage.PNG" width="1132">
+   <img src ="readMeSource/WebPage.png" width="1132">
 </p>
 
 
